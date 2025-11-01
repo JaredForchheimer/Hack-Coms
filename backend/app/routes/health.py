@@ -20,21 +20,21 @@ def health_check():
         db_healthy = db_service.health_check()
         db_service.close()
         
-        # Check Claude API (basic validation)
-        claude_healthy = bool(current_app.config.get('ANTHROPIC_API_KEY'))
+        # Check OpenAI API (basic validation)
+        openai_healthy = bool(current_app.config.get('OPENAI_API_KEY'))
         
         status = {
-            'status': 'healthy' if db_healthy and claude_healthy else 'unhealthy',
+            'status': 'healthy' if db_healthy and openai_healthy else 'unhealthy',
             'version': '1.0.0',
             'services': {
                 'database': 'up' if db_healthy else 'down',
-                'claude_api': 'configured' if claude_healthy else 'not_configured',
+                'openai_api': 'configured' if openai_healthy else 'not_configured',
                 'flask': 'up'
             },
             'environment': current_app.config.get('FLASK_ENV', 'unknown')
         }
         
-        status_code = 200 if db_healthy and claude_healthy else 503
+        status_code = 200 if db_healthy and openai_healthy else 503
         return jsonify(status), status_code
         
     except Exception as e:
@@ -73,25 +73,25 @@ def database_health():
         }), 503
 
 
-@health_bp.route('/claude', methods=['GET'])
-def claude_health():
-    """Claude API health check."""
+@health_bp.route('/openai', methods=['GET'])
+def openai_health():
+    """OpenAI API health check."""
     try:
-        from ..services.claude_service import ClaudeService
+        from ..services.openai_service import OpenAIService
         
-        claude_service = ClaudeService()
-        connection_test = claude_service.test_connection()
+        openai_service = OpenAIService()
+        connection_test = openai_service.test_connection()
         
         return jsonify({
             'status': 'healthy' if connection_test else 'unhealthy',
-            'api_configured': bool(current_app.config.get('ANTHROPIC_API_KEY')),
+            'api_configured': bool(current_app.config.get('OPENAI_API_KEY')),
             'connection_test': connection_test
         })
         
     except Exception as e:
-        logger.error(f"Claude health check failed: {str(e)}")
+        logger.error(f"OpenAI health check failed: {str(e)}")
         return jsonify({
             'status': 'unhealthy',
             'error': str(e),
-            'api_configured': bool(current_app.config.get('ANTHROPIC_API_KEY'))
+            'api_configured': bool(current_app.config.get('OPENAI_API_KEY'))
         }), 503
