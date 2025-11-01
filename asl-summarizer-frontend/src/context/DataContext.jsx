@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-const DataContext = createContext()
+export const DataContext = createContext()
 
 const initialState = {
   folders: [],
