@@ -174,9 +174,9 @@ def validate_content():
         
         logger.info("Processing content validation request")
         
-        # Validate with Claude
+        # Validate with OpenAI
         with get_media_service() as media_service:
-            validation_result = media_service.claude.validate_content(content, title)
+            validation_result = media_service.openai.validate_content(content, title)
         
         if not validation_result['success']:
             logger.warning(f"Content validation failed: {validation_result.get('error')}")

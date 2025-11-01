@@ -3,21 +3,44 @@
 import logging
 import json
 from typing import Dict, Any, List
-from anthropic import Anthropic
 from flask import current_app
 
 logger = logging.getLogger(__name__)
 
 
 class ClaudeService:
-    """Service for interacting with Anthropic Claude API."""
+    """Service for interacting with Claude API (supports both Anthropic and OpenRouter)."""
 
     def __init__(self, api_key: str = None):
         self.api_key = api_key or current_app.config.get('ANTHROPIC_API_KEY')
         if not self.api_key:
-            raise ValueError("Anthropic API key is required")
+            raise ValueError("API key is required (Anthropic or OpenRouter)")
         
-        self.client = Anthropic(api_key=self.api_key)
+        # Detect if this is an OpenRouter key
+        self.is_openrouter = self.api_key.startswith('sk-or-')
+        
+        if self.is_openrouter:
+            # Use OpenAI client for OpenRouter (as per OpenRouter documentation)
+            try:
+                from openai import OpenAI
+                self.client = OpenAI(
+                    base_url="https://openrouter.ai/api/v1",
+                    api_key=self.api_key
+                )
+                self.model = "anthropic/claude-3-sonnet"
+                logger.info("Using OpenRouter API for Claude access")
+            except ImportError:
+                raise ValueError("OpenAI library not installed. Install with: pip install openai")
+        else:
+            # Use Anthropic directly
+            try:
+                from anthropic import Anthropic
+                self.client = Anthropic(api_key=self.api_key)
+                self.model = "claude-3-sonnet-20240229"
+                logger.info("Using Anthropic API directly")
+            except ImportError:
+                raise ValueError("Anthropic library not installed. Install with: pip install anthropic>=0.25.0")
+        
         self.timeout = current_app.config.get('LLM_REQUEST_TIMEOUT', 60)
 
     def validate_content(self, content: str, title: str = None) -> Dict[str, Any]:
@@ -34,20 +57,36 @@ class ClaudeService:
             # Prepare validation prompt
             validation_prompt = self._create_validation_prompt(content, title)
             
-            # Call Claude API
-            response = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
-                max_tokens=1000,
-                temperature=0.1,
-                messages=[{
-                    "role": "user",
-                    "content": validation_prompt
-                }]
-            )
+            # Call Claude API (OpenRouter or Anthropic)
+            if self.is_openrouter:
+                response = self.client.chat.completions.create(
+                    extra_headers={
+                        "HTTP-Referer": "http://localhost:5000",
+                        "X-Title": "ASL Summarizer"
+                    },
+                    model=self.model,
+                    messages=[{
+                        "role": "user",
+                        "content": validation_prompt
+                    }],
+                    max_tokens=1000,
+                    temperature=0.1
+                )
+                response_text = response.choices[0].message.content.strip()
+            else:
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=1000,
+                    temperature=0.1,
+                    messages=[{
+                        "role": "user",
+                        "content": validation_prompt
+                    }]
+                )
+                response_text = response.content[0].text.strip()
 
             # Parse validation results
-            result_text = response.content[0].text.strip()
-            validation_result = self._parse_validation_response(result_text)
+            validation_result = self._parse_validation_response(response_text)
             
             # Determine if content is accepted
             checks = validation_result.get('checks', {})
@@ -88,18 +127,33 @@ class ClaudeService:
             # Prepare summarization prompt
             summary_prompt = self._create_summarization_prompt(content, title)
             
-            # Call Claude API
-            response = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
-                max_tokens=2000,
-                temperature=0.3,
-                messages=[{
-                    "role": "user",
-                    "content": summary_prompt
-                }]
-            )
-
-            summary_text = response.content[0].text.strip()
+            # Call Claude API (OpenRouter or Anthropic)
+            if self.is_openrouter:
+                response = self.client.chat.completions.create(
+                    extra_headers={
+                        "HTTP-Referer": "http://localhost:5000",
+                        "X-Title": "ASL Summarizer"
+                    },
+                    model=self.model,
+                    messages=[{
+                        "role": "user",
+                        "content": summary_prompt
+                    }],
+                    max_tokens=2000,
+                    temperature=0.3
+                )
+                summary_text = response.choices[0].message.content.strip()
+            else:
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=2000,
+                    temperature=0.3,
+                    messages=[{
+                        "role": "user",
+                        "content": summary_prompt
+                    }]
+                )
+                summary_text = response.content[0].text.strip()
             
             # Clean up the summary
             summary_text = self._clean_summary(summary_text)
@@ -265,15 +319,32 @@ Please provide only the summary text without any additional commentary or format
     def test_connection(self) -> bool:
         """Test the Claude API connection."""
         try:
-            response = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
-                max_tokens=10,
-                messages=[{
-                    "role": "user",
-                    "content": "Hello"
-                }]
-            )
-            return True
+            if self.is_openrouter:
+                # Test OpenRouter connection using OpenAI client
+                response = self.client.chat.completions.create(
+                    extra_headers={
+                        "HTTP-Referer": "http://localhost:5000",
+                        "X-Title": "ASL Summarizer"
+                    },
+                    model=self.model,
+                    messages=[{
+                        "role": "user",
+                        "content": "Hello"
+                    }],
+                    max_tokens=10
+                )
+                return len(response.choices[0].message.content) > 0
+            else:
+                # Test Anthropic connection
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=10,
+                    messages=[{
+                        "role": "user",
+                        "content": "Hello"
+                    }]
+                )
+                return True
         except Exception as e:
             logger.error(f"Claude API connection test failed: {str(e)}")
             return False

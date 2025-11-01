@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from .scraping_service import ScrapingService
-from .claude_service import ClaudeService
+from .openai_service import OpenAIService
 from ..utils.validators import validate_url, validate_file
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class MediaService:
     def __init__(self, config=None):
         self.config = config
         self.scraper = ScrapingService()
-        self.claude = ClaudeService()
+        self.openai = OpenAIService()
         self.upload_folder = config.get('UPLOAD_FOLDER', 'uploads') if config else 'uploads'
         self.max_content_size = config.get('MAX_CONTENT_SIZE', 1000000) if config else 1000000
 
@@ -53,9 +53,9 @@ class MediaService:
                 content = content[:self.max_content_size]
                 logger.warning(f"Content truncated to {self.max_content_size} characters")
             
-            # Validate content with Claude
-            validation_result = self.claude.validate_content(
-                content, 
+            # Validate content with OpenAI
+            validation_result = self.openai.validate_content(
+                content,
                 extraction_result.get('title')
             )
             
@@ -116,8 +116,8 @@ class MediaService:
                     content = content[:self.max_content_size]
                     logger.warning(f"File content truncated to {self.max_content_size} characters")
                 
-                # Validate content with Claude
-                validation_result = self.claude.validate_content(content, filename)
+                # Validate content with OpenAI
+                validation_result = self.openai.validate_content(content, filename)
                 
                 if not validation_result['success']:
                     return {
@@ -168,8 +168,8 @@ class MediaService:
                     'error': 'Content is required for summary generation'
                 }
             
-            # Generate summary with Claude
-            summary_result = self.claude.generate_summary(content, title)
+            # Generate summary with OpenAI
+            summary_result = self.openai.generate_summary(content, title)
             
             logger.info(f"Summary generation completed. Success: {summary_result['success']}")
             return summary_result

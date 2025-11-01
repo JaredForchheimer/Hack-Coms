@@ -34,7 +34,7 @@ class Config:
     DB_MAX_OVERFLOW = config('DB_MAX_OVERFLOW', default=20, cast=int)
     
     # External API Keys
-    ANTHROPIC_API_KEY = config('ANTHROPIC_API_KEY')
+    OPENAI_API_KEY = config('OPENAI_API_KEY')
     
     # Content Processing Settings
     MAX_CONTENT_SIZE = 1000000  # 1MB max text content
