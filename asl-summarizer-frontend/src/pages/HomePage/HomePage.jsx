@@ -5,7 +5,9 @@ import Button from '../../components/common/Button/Button'
 import './HomePage.css'
 
 const HomePage = () => {
+  console.log('HomePage component rendering...')
   const { user, logout } = useAuth()
+  console.log('HomePage user:', user)
 
   const handleLogout = async () => {
     try {

@@ -7,6 +7,15 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth()
   const location = useLocation()
 
+  // TEMPORARY: Skip authentication for development
+  // Remove this when authentication is properly set up
+  const isDevelopment = import.meta.env.DEV || import.meta.env.NODE_ENV === 'development'
+  
+  if (isDevelopment) {
+    console.log('Development mode: Skipping authentication')
+    return children
+  }
+
   if (isLoading) {
     return (
       <div className="protected-route-loading">

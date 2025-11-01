@@ -68,6 +68,25 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // TEMPORARY: Auto-login for development
+        const isDevelopment = import.meta.env.DEV || import.meta.env.NODE_ENV === 'development'
+        
+        if (isDevelopment) {
+          // Create a mock user for development
+          const mockUser = {
+            id: 'dev-user',
+            email: 'developer@example.com',
+            username: 'Developer'
+          }
+          const mockToken = 'dev-token-123'
+          
+          dispatch({
+            type: 'LOGIN_SUCCESS',
+            payload: { user: mockUser, token: mockToken }
+          })
+          return
+        }
+
         const token = localStorage.getItem('authToken')
         if (token) {
           const user = await authService.verifyToken(token)

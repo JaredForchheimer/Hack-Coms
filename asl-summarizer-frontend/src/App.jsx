@@ -12,6 +12,8 @@ import CommunityPage from './pages/CommunityPage/CommunityPage'
 import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary'
 
 function App() {
+  console.log('App component rendering...')
+  
   return (
     <ErrorBoundary>
       <AuthProvider>
