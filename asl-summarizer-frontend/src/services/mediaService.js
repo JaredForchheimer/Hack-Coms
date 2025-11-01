@@ -1,44 +1,52 @@
 // Media processing and validation service
 import axios from 'axios'
 
-// Mock API endpoints - replace with real backend URLs
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api'
+// Real API endpoints
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+
+// Create axios instance with default config
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 60000, // 60 seconds for LLM operations
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+// Add response interceptor for error handling
+apiClient.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message)
+    return Promise.reject(error.response?.data || { success: false, error: error.message })
+  }
+)
 
 export const mediaService = {
   // Extract text from URL (news article or YouTube video)
   async extractTextFromUrl(url) {
     try {
-      // Mock implementation - replace with real API call
       console.log('Extracting text from URL:', url)
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const response = await apiClient.post('/media/extract-url', { url })
       
-      // Mock response based on URL type
-      if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        return {
-          success: true,
-          type: 'video',
-          title: 'Sample YouTube Video',
-          transcript: 'This is a sample transcript from a YouTube video. It contains educational content about technology and innovation.',
-          duration: '5:30',
-          thumbnail: 'https://via.placeholder.com/320x180'
-        }
-      } else {
-        return {
-          success: true,
-          type: 'article',
-          title: 'Sample News Article',
-          content: 'This is a sample article content. It discusses recent developments in technology and their impact on society.',
-          author: 'John Doe',
-          publishDate: new Date().toISOString()
-        }
+      return {
+        success: response.success,
+        type: response.type,
+        title: response.title,
+        transcript: response.transcript,
+        content: response.content,
+        duration: response.duration,
+        thumbnail: response.thumbnail,
+        author: response.author,
+        publishDate: response.publishDate,
+        validation: response.validation
       }
     } catch (error) {
       console.error('Error extracting text:', error)
       return {
         success: false,
-        error: 'Failed to extract text from URL'
+        error: error.error || 'Failed to extract text from URL'
       }
     }
   },
@@ -48,66 +56,53 @@ export const mediaService = {
     try {
       console.log('Validating content...')
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Mock validation - replace with real LLM API call
-      const validationChecks = {
-        pornography: false,
-        profanity: false,
-        hateSpeech: false,
-        discrimination: false,
-        racism: false,
-        politicalBias: false
-      }
-      
-      // Simulate some content being rejected
-      const isRejected = content.toLowerCase().includes('reject') || 
-                        content.toLowerCase().includes('inappropriate')
-      
-      if (isRejected) {
-        validationChecks.profanity = true
-      }
-      
-      const isAccepted = Object.values(validationChecks).every(check => !check)
+      const response = await apiClient.post('/media/validate', { content })
       
       return {
-        success: true,
-        accepted: isAccepted,
-        checks: validationChecks,
-        reason: isAccepted ? 'Content passed all validation checks' : 'Content contains inappropriate material'
+        success: response.success,
+        accepted: response.accepted,
+        checks: response.checks,
+        reason: response.reason
       }
     } catch (error) {
       console.error('Error validating content:', error)
       return {
         success: false,
-        error: 'Failed to validate content'
+        error: error.error || 'Failed to validate content'
       }
     }
   },
 
-  // Generate summary using LLM APIs
-  async generateSummary(content, title) {
+  // Generate summary using LLM APIs and store in database
+  async generateSummary(content, title, sourceData = {}) {
     try {
       console.log('Generating summary...')
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const payload = {
+        content,
+        title,
+        source_data: {
+          type: sourceData.type || 'unknown',
+          url: sourceData.url || null,
+          metadata: sourceData.metadata || {}
+        }
+      }
       
-      // Mock summary generation - replace with real LLM API call
-      const summary = `This is an AI-generated summary of "${title}". The content discusses key points and provides insights into the main topics covered. The summary captures the essential information while maintaining clarity and conciseness.`
+      const response = await apiClient.post('/media/summarize', payload)
       
       return {
-        success: true,
-        summary,
-        wordCount: summary.split(' ').length,
-        generatedAt: new Date().toISOString()
+        success: response.success,
+        summary: response.summary,
+        wordCount: response.wordCount,
+        generatedAt: response.generatedAt,
+        sourceId: response.source_id,
+        summaryId: response.summary_id
       }
     } catch (error) {
       console.error('Error generating summary:', error)
       return {
         success: false,
-        error: 'Failed to generate summary'
+        error: error.error || 'Failed to generate summary'
       }
     }
   },
@@ -117,23 +112,120 @@ export const mediaService = {
     try {
       console.log('Processing file:', file.name)
       
-      // Simulate file processing
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const formData = new FormData()
+      formData.append('file', file)
       
-      // Mock file content extraction
-      return {
-        success: true,
-        type: 'file',
-        title: file.name,
-        content: `This is extracted content from the uploaded file: ${file.name}. The file contains relevant information that can be processed and summarized.`,
-        size: file.size,
-        uploadedAt: new Date().toISOString()
-      }
+      const response = await axios.post(`${API_BASE_URL}/media/process-file`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        timeout: 60000
+      })
+      
+      return response.data
     } catch (error) {
       console.error('Error processing file:', error)
+      const errorData = error.response?.data || { success: false, error: error.message }
       return {
         success: false,
-        error: 'Failed to process file'
+        error: errorData.error || 'Failed to process file'
+      }
+    }
+  },
+
+  // Get all sources from database
+  async getSources(limit = 100, offset = 0, search = '') {
+    try {
+      const params = { limit, offset }
+      if (search) params.search = search
+      
+      const response = await apiClient.get('/sources', { params })
+      
+      return {
+        success: response.success,
+        sources: response.sources || [],
+        count: response.count || 0
+      }
+    } catch (error) {
+      console.error('Error fetching sources:', error)
+      return {
+        success: false,
+        error: error.error || 'Failed to fetch sources',
+        sources: []
+      }
+    }
+  },
+
+  // Get all summaries from database
+  async getSummaries(limit = 100, offset = 0) {
+    try {
+      const response = await apiClient.get('/summaries', {
+        params: { limit, offset }
+      })
+      
+      return {
+        success: response.success,
+        summaries: response.summaries || [],
+        count: response.count || 0
+      }
+    } catch (error) {
+      console.error('Error fetching summaries:', error)
+      return {
+        success: false,
+        error: error.error || 'Failed to fetch summaries',
+        summaries: []
+      }
+    }
+  },
+
+  // Get source by ID
+  async getSourceById(id) {
+    try {
+      const response = await apiClient.get(`/sources/${id}`)
+      return {
+        success: response.success,
+        source: response.source
+      }
+    } catch (error) {
+      console.error('Error fetching source:', error)
+      return {
+        success: false,
+        error: error.error || 'Failed to fetch source'
+      }
+    }
+  },
+
+  // Get summary by ID
+  async getSummaryById(id) {
+    try {
+      const response = await apiClient.get(`/summaries/${id}`)
+      return {
+        success: response.success,
+        summary: response.summary
+      }
+    } catch (error) {
+      console.error('Error fetching summary:', error)
+      return {
+        success: false,
+        error: error.error || 'Failed to fetch summary'
+      }
+    }
+  },
+
+  // Get application statistics
+  async getStatistics() {
+    try {
+      const response = await apiClient.get('/statistics')
+      return {
+        success: response.success,
+        statistics: response.statistics
+      }
+    } catch (error) {
+      console.error('Error fetching statistics:', error)
+      return {
+        success: false,
+        error: error.error || 'Failed to fetch statistics',
+        statistics: {}
       }
     }
   }
