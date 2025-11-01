@@ -46,6 +46,100 @@
   padding: var(--spacing-2xl) 0;
 }
 
+.sources-page__error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.sources-page__error p {
+  margin: 0;
+  color: var(--color-danger);
+  font-weight: var(--font-weight-medium);
+}
+
+.sources-page__upload {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.sources-page__validating,
+.sources-page__generating {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sources-page__validating h3,
+.sources-page__generating h3 {
+  margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
+  color: var(--color-gray-800);
+  font-size: var(--font-size-lg);
+}
+
+.sources-page__validating p,
+.sources-page__generating p {
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.sources-page__validation {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.sources-page__content-preview {
+  margin-bottom: var(--spacing-lg);
+}
+
+.sources-page__content-preview h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-gray-800);
+  font-size: var(--font-size-lg);
+}
+
+.sources-page__content-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-gray-200);
+}
+
+.sources-page__content-card h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-gray-800);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.sources-page__content-type {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-gray-500);
+  font-size: var(--font-size-sm);
+  text-transform: capitalize;
+}
+
+.sources-page__content-text {
+  color: var(--color-gray-700);
+  line-height: 1.6;
+  font-size: var(--font-size-sm);
+  background: var(--color-gray-50);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid var(--color-primary);
+}
+
 .placeholder-content {
   max-width: 600px;
   margin: 0 auto;
