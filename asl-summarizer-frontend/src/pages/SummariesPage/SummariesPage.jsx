@@ -1,15 +1,48 @@
-import React, { useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { DataContext } from '../../context/DataContext'
 import Button from '../../components/common/Button/Button'
+import LoadingSpinner from '../../components/common/LoadingSpinner/LoadingSpinner'
+import mediaService from '../../services/mediaService'
 import '../SourcesPage/SourcesPage.css'
 import './SummariesPage.css'
 
 const SummariesPage = () => {
-  const { summaries, files } = useContext(DataContext)
+  const [summaries, setSummaries] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const getSourceFile = (sourceId) => {
-    return files.find(file => file.id === sourceId)
+  useEffect(() => {
+    fetchSummaries()
+  }, [])
+
+  const fetchSummaries = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const result = await mediaService.getSummaries()
+      
+      if (result.success) {
+        setSummaries(result.summaries || [])
+      } else {
+        setError(result.error || 'Failed to fetch summaries')
+      }
+    } catch (err) {
+      setError('Failed to fetch summaries: ' + err.message)
+      console.error('Error fetching summaries:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getSourceFile = (summary) => {
+    // Since we now get source info from the summary response,
+    // use the embedded source data
+    return {
+      id: summary.text_source_id,
+      name: summary.source_title || 'Unknown Source',
+      type: 'unknown' // This could be enhanced by including type in backend response
+    }
   }
 
   const formatDate = (dateString) => {
@@ -40,7 +73,23 @@ const SummariesPage = () => {
 
       <main className="page-main">
         <div className="container">
-          {summaries.length === 0 ? (
+          {loading ? (
+            <div className="summaries-page__loading">
+              <LoadingSpinner />
+              <p>Loading summaries...</p>
+            </div>
+          ) : error ? (
+            <div className="summaries-page__error">
+              <div className="placeholder-content">
+                <div className="placeholder-content__icon">❌</div>
+                <h2 className="placeholder-content__title">Error Loading Summaries</h2>
+                <p className="placeholder-content__description">{error}</p>
+                <Button variant="primary" onClick={fetchSummaries}>
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          ) : summaries.length === 0 ? (
             <div className="summaries-page__empty">
               <div className="placeholder-content">
                 <div className="placeholder-content__icon">📝</div>
@@ -59,16 +108,22 @@ const SummariesPage = () => {
             <div className="summaries-page__content">
               <div className="summaries-page__header">
                 <h2>Generated Summaries ({summaries.length})</h2>
-                <Link to="/sources">
-                  <Button variant="secondary">
-                    Add More Content
+                <div className="summaries-page__actions">
+                  <Button variant="ghost" onClick={fetchSummaries}>
+                    Refresh
                   </Button>
-                </Link>
+                  <Link to="/sources">
+                    <Button variant="secondary">
+                      Add More Content
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
               <div className="summaries-page__grid">
                 {summaries.map((summary) => {
-                  const sourceFile = getSourceFile(summary.sourceId)
+                  const sourceFile = getSourceFile(summary)
+                  const wordCount = summary.metadata?.word_count || summary.content.split(' ').length
                   return (
                     <div key={summary.id} className="summary-card">
                       <div className="summary-card__header">
@@ -78,7 +133,7 @@ const SummariesPage = () => {
                             Source: {sourceFile?.name || 'Unknown'}
                           </span>
                           <span className="summary-card__date">
-                            {formatDate(summary.generatedAt)}
+                            {formatDate(summary.created_at)}
                           </span>
                         </div>
                       </div>
@@ -90,13 +145,11 @@ const SummariesPage = () => {
                       <div className="summary-card__footer">
                         <div className="summary-card__stats">
                           <span className="summary-card__word-count">
-                            {summary.wordCount} words
+                            {wordCount} words
                           </span>
-                          {sourceFile && (
-                            <span className="summary-card__type">
-                              {sourceFile.type}
-                            </span>
-                          )}
+                          <span className="summary-card__type">
+                            {summary.summary_type}
+                          </span>
                         </div>
                         <div className="summary-card__actions">
                           <Button variant="ghost" size="small">

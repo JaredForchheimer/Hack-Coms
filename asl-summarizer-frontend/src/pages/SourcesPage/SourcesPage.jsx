@@ -38,16 +38,25 @@ const SourcesPage = () => {
 
       setExtractedContent(result)
 
-      // Validate the extracted content
-      const contentToValidate = result.transcript || result.content
-      const validation = await mediaService.validateContent(contentToValidate)
+      // For URL processing, validation is already included in the response
+      if (uploadData.type === 'url' && result.validation) {
+        setValidationResult(result.validation)
+        setCurrentStep('validation-result')
+      } else if (uploadData.type === 'file' && result.validation) {
+        setValidationResult(result.validation)
+        setCurrentStep('validation-result')
+      } else {
+        // Fallback: validate the extracted content separately
+        const contentToValidate = result.transcript || result.content
+        const validation = await mediaService.validateContent(contentToValidate)
 
-      if (!validation.success) {
-        throw new Error(validation.error)
+        if (!validation.success) {
+          throw new Error(validation.error)
+        }
+
+        setValidationResult(validation)
+        setCurrentStep('validation-result')
       }
-
-      setValidationResult(validation)
-      setCurrentStep('validation-result')
     } catch (err) {
       setError(err.message)
       setCurrentStep('upload')
@@ -62,18 +71,35 @@ const SourcesPage = () => {
 
     try {
       const contentToSummarize = extractedContent.transcript || extractedContent.content
+      
+      // Prepare source data for backend
+      const sourceData = {
+        type: extractedContent.type,
+        url: extractedContent.url,
+        metadata: {
+          author: extractedContent.author,
+          publishDate: extractedContent.publishDate,
+          duration: extractedContent.duration,
+          thumbnail: extractedContent.thumbnail,
+          size: extractedContent.size,
+          uploadedAt: extractedContent.uploadedAt,
+          validation: validationResult
+        }
+      }
+
       const summaryResult = await mediaService.generateSummary(
         contentToSummarize,
-        extractedContent.title
+        extractedContent.title,
+        sourceData
       )
 
       if (!summaryResult.success) {
         throw new Error(summaryResult.error)
       }
 
-      // Add the source file to data context
+      // Update context with new data (this will be refreshed from database in pages)
       const sourceFile = {
-        id: Date.now().toString(),
+        id: summaryResult.sourceId,
         name: extractedContent.title,
         type: extractedContent.type,
         content: contentToSummarize,
@@ -83,10 +109,9 @@ const SourcesPage = () => {
       }
       addFile(sourceFile)
 
-      // Add the summary to data context
       const summary = {
-        id: Date.now().toString() + '_summary',
-        sourceId: sourceFile.id,
+        id: summaryResult.summaryId,
+        sourceId: summaryResult.sourceId,
         title: `Summary: ${extractedContent.title}`,
         content: summaryResult.summary,
         wordCount: summaryResult.wordCount,
