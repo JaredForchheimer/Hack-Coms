@@ -2,6 +2,7 @@ import os
 import json
 import re
 import requests
+import asl_translate
 import sys
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -68,6 +69,10 @@ def parse(content: str) -> str:
 
 def translate(content: str, target_language: str) -> str:
     """Translates text using the Gemini 'gemini-pro' model via the SDK."""
+    if target_language == "ASL":
+        asl_translate.make_vid(content)
+        return "ASL,video/output.mp4"
+
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents="Translate the following text into "
