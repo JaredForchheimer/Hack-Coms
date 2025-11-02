@@ -92,22 +92,9 @@ export default function App() {
               </audio>
               </div>
             )}
-
-            {/* ASL video */}
-            {data.translation && data.translation_lang === "ASL" && (
-              <video
-                controls
-                width="400"
-                style={{ marginTop: "10px" }}
-                src={`http://localhost:5000/api/video?path=${encodeURIComponent(
-                  data.translation
-                )}`}
-              />
-            )}
           </div>
         ))}
       </div>
     </div>
   );
 }
-
