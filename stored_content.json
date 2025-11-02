@@ -1,26 +1,48 @@
 {
-  "https://www.cnn.com/2025/11/01/politics/early-voting-elections-nyc-virginia-new-jersey": {
-    "url": "https://www.cnn.com/2025/11/01/politics/early-voting-elections-nyc-virginia-new-jersey",
-    "summary": "CNN's analysis of early voting data for upcoming elections in New Jersey, Virginia, and New York City offers early insights, but emphasizes these are hints, not definitive predictions for Election Day.\n\nKey findings include:\n\n*   **New Jersey:** Democratic gubernatorial candidate Mikie Sherrill is in a stronger position than Kamala Harris was at the same point last year, with Democrats showing a greater lead in both mail and in-person early voting turnout compared to Republicans.\n*   **Virginia:** Democratic candidate Abigail Spanberger also appears in a slightly stronger position than Harris was last year, largely due to mail ballots (which typically favor Democrats) making up a larger share of the pre-election vote, and a narrowing gap in early in-person turnout between counties that previously favored Trump and those that favored Harris.\n*   **New York City:** While older Democratic voters initially turned out more (benefiting Andrew Cuomo), the overall early electorate is younger than in previous mayoral elections and has become progressively younger over the week, indicating increased activity among younger voters who tend to support Zohran Mamdani. Despite some geographic areas favoring Cuomo, this alone isn't enough to reverse Mamdani's lead among early Democratic voters based on primary patterns.",
-    "translation": "Other,audio/translation.mp3",
-    "translation_lang": "german"
-  },
   "https://www.cnn.com/2025/11/01/politics/obama-campaign-nj-virginia-election": {
     "url": "https://www.cnn.com/2025/11/01/politics/obama-campaign-nj-virginia-election",
     "summary": "Former President Barack Obama campaigned on Saturday for Democratic gubernatorial nominees Abigail Spanberger in Virginia and Mikie Sherrill in New Jersey, ahead of Tuesday's elections. Obama urged voters to break with President Donald Trump, delivering sharp criticism of Trump's administration, accusing it of weakening democratic norms, concentrating economic power, and exhibiting \"lawlessness and recklessness.\"\n\nObama emphasized the importance of these elections as a \"temperature check\" on the nation's political mood and a precursor for future midterms, stressing that \"elections do matter.\" Both Spanberger and Sherrill are favored in their respective races, though their victories are not guaranteed, and the outcomes are seen as significant indicators of the public's sentiment.",
     "translation": "video/output.mp4",
     "translation_lang": "ASL"
   },
-  "https://www.cnn.com/2025/11/01/politics/trump-pentagon-nigeria-action": {
-    "url": "https://www.cnn.com/2025/11/01/politics/trump-pentagon-nigeria-action",
-    "summary": "Donald Trump has ordered the Defense Department to prepare for potential military action in Nigeria, accusing the country of failing to stop violence against Christians. Trump also threatened to cut off aid and potentially intervene militarily to wipe out \"Islamic Terrorists.\" Nigeria denies the accusations of religious intolerance and states that Christians and Muslims are both victims of attacks. Nigeria's president maintains the country protects religious freedom and is working with the U.S. on the issue, seeking military support against violent extremists rather than being labeled a \"Country of Particular Concern.\"\n",
-    "translation": "Other,audio/translation_spanish_1c77168096.mp3",
-    "translation_lang": "spanish"
-  },
   "https://www.cnn.com/travel/halloween-new-york-city-chance-encounters": {
     "url": "https://www.cnn.com/travel/halloween-new-york-city-chance-encounters",
-    "summary": "While visiting New York City for Halloween in 2019, Parisian Claire met David at a party. Despite initial communication mishaps and distance, they pursued a relationship, navigating challenges like long distance and pandemic travel restrictions. They eventually married in France in 2022 and settled in Los Angeles, grateful for the stability and support they found in each other.",
-    "translation": "Other,audio/translation_chinese_9be37fe82c.mp3",
-    "translation_lang": "chinese"
+    "summary": "While feeling lost and unhappy in New York City, Parisian Claire met David at a Halloween party in 2019. Despite initial doubts and geographical challenges (LA vs. Paris), their connection deepened through long-distance communication, pandemic-era quarantines with Claire's grandparents, and travel adventures. They eventually married in France in 2022 and settled in Los Angeles, grateful for the unwavering support and shared vision they found in each other.\n",
+    "translation": "audio/translation_spanish_9be37fe82c.mp3",
+    "translation_lang": "spanish",
+    "translation_type": "Other"
+  },
+  "https://www.cnn.com/sport/live-news/world-series-dodgers-blue-jays-11-01-25": {
+    "url": "https://www.cnn.com/sport/live-news/world-series-dodgers-blue-jays-11-01-25",
+    "summary": "The Los Angeles Dodgers won the 2025 World Series, defeating the Toronto Blue Jays in a dramatic Game 7. Toronto took an early lead, but the Dodgers battled back, with key home runs from Miguel Rojas in the 9th and Will Smith in the 11th inning ultimately securing the victory. Pitcher Yoshinobu Yamamoto was named World Series MVP for his outstanding performance. The Dodgers are the first team to win back-to-back World Series since 1998-2000.",
+    "translation": "video/output_9b1a523571.mp4",
+    "translation_lang": "ASL"
+  },
+  "https://www.youtube.com/watch?v=8S0FDjFBj8o": {
+    "url": "https://www.youtube.com/watch?v=8S0FDjFBj8o",
+    "summary": "The speaker satirizes TED Talks by admitting upfront that they have nothing to say, yet will use common speaking techniques like hand gestures, personal anecdotes, and random data/graphs to create the illusion of insightful and impactful content. They highlight the absurdity of the formulaic approach, proving how easily an audience can be manipulated into believing they've learned something even when presented with utter nonsense. The speaker essentially demonstrates how to give a convincing talk without actually having anything to say.\n",
+    "translation": "Other,audio/translation_spanish_e17810ca8c.mp3",
+    "translation_lang": "spanish"
+  },
+  "https://www.youtube.com/watch?v=1lm4Wlpy2wU": {
+    "url": "https://www.youtube.com/watch?v=1lm4Wlpy2wU",
+    "summary": "To get a YouTube video transcript:\n\n1.  Open the YouTube video.\n2.  Click the three dots next to the like/dislike buttons.\n3.  Select \"Show transcript.\"\n4.  To copy the transcript, click the three vertical dots in the transcript window and select \"Toggle timestamps\" to remove them.\n5.  Select and drag to highlight the entire transcript, right-click, and copy.\n6.  Paste the transcript wherever you need it.\n",
+    "translation": "video/output_d223cf4d97.mp4",
+    "translation_lang": "ASL",
+    "translation_type": "ASL"
+  },
+  "https://www.cnn.com/2025/11/01/us/portland-national-guard-deployment-trial": {
+    "url": "https://www.cnn.com/2025/11/01/us/portland-national-guard-deployment-trial",
+    "summary": "A federal judge is expected to rule soon on the legality of National Guard deployments to Portland to protect an ICE facility, after a trial highlighted the following key points:\n\n*   National Guard troops were deployed to the facility even after a judge issued a restraining order against it, raising questions of contempt.\n*   ICE officials were not consulted before Trump ordered the deployment.\n*   There's a disagreement on whether the protests are extreme enough to warrant the National Guard, with the city arguing local law enforcement can handle it and that federal tactics exacerbate the situation.\n*   Portland Police highlighted a different use of force from federal agents who deployed munitions when local law enforcement did not believe it necessary.\n*   The Trump administration argued the deployment is necessary due to the persistent and organized violence directed at the facility.\n*   Local officials claimed that National Guard was inflaming tensions and violating Oregon sovereignty.\n*   The decision is expected by Sunday and will likely be appealed.",
+    "translation": "video/output_e74ef6b4e0.mp4",
+    "translation_lang": "ASL",
+    "translation_type": "ASL"
+  },
+  "https://www.cnn.com/2025/11/02/politics/democrats-shutdown-politics": {
+    "url": "https://www.cnn.com/2025/11/02/politics/democrats-shutdown-politics",
+    "summary": "\u7f8e\u56fd\u6709\u7ebf\u7535\u89c6\u65b0\u95fb\u7f51\u62a5\u9053\u79f0\uff0c\u6c11\u4e3b\u515a\u4eba\u76ee\u524d\u6b63\u5728\u201c\u8d62\u5f97\u201d\u56f4\u7ed5\u653f\u5e9c\u5173\u95e8\u7684\u653f\u6cbb\u6597\u4e89\uff0c\u8fd9\u4e3b\u8981\u662f\u7531\u4e8e\u516c\u4f17\u8ba4\u4e3a\u7279\u6717\u666e\u548c\u5171\u548c\u515a\u4eba\u5e94\u8be5\u627f\u62c5\u66f4\u591a\u8d23\u4efb\u3002\u6c11\u4e3b\u515a\u4eba\u6b63\u5728\u8981\u6c42\u5ef6\u957f\u5e7f\u53d7\u6b22\u8fce\u7684\u5965\u5df4\u9a6c\u533b\u6539\u8865\u8d34\uff0c\u800c\u5171\u548c\u515a\u4eba\u7684\u884c\u52a8\uff0c\u5982\u89e3\u96c7\u8054\u90a6\u5de5\u4f5c\u4eba\u5458\u548c\u6f5c\u5728\u7684\u98df\u54c1\u5238\u524a\u51cf\uff0c\u4f3c\u4e4e\u9002\u5f97\u5176\u53cd\u3002\u6b64\u6b21\u5173\u95e8\u4e5f\u56e2\u7ed3\u4e86\u4e00\u4e9b\u6c11\u4e3b\u515a\u4eba\u7684\u652f\u6301\uff0c\u8868\u660e\u6c11\u4e3b\u515a\u4eba\u6ca1\u6709\u591a\u5c11\u8ba9\u6b65\u7684\u52a8\u673a\uff0c\u7279\u522b\u662f\u7531\u4e8e\u4ed6\u4eec\u7684\u9009\u6c11\u5e0c\u671b\u4ed6\u4eec\u66f4\u52a0\u52aa\u529b\u5730\u5bf9\u6297\u7279\u6717\u666e\u653f\u5e9c\u3002",
+    "translation": "audio/translation_chinese_ca8d0395b1.mp3",
+    "translation_lang": "chinese",
+    "translation_type": "Other"
   }
 }

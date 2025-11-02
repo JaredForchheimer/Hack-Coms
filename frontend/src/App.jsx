@@ -57,7 +57,7 @@ export default function App() {
         />
         <input
           type="text"
-          placeholder="Translate summary to (optional)... e.g., Spanish"
+          placeholder="Translate summary to (optional)... e.g., Spanish or ASL"
           value={lang}
           onChange={(e) => setLang(e.target.value)}
         />
@@ -77,19 +77,37 @@ export default function App() {
             <p className="url">🔗 {url}</p>
             <p className="summary">{data.summary}</p>
 
-            {/* Audio translation */}
-            {data.translation && data.translation_lang !== "ASL" && (
+            {/* ASL video - Check both translation_type and translation_lang */}
+            {data.translation && 
+             (data.translation_type === "ASL" || data.translation_lang === "ASL") && (
+              <div className="translation-video">
+                <p>🤟 ASL Video:</p>
+                <video
+                  controls
+                  width="400"
+                  style={{ marginTop: "10px" }}
+                  src={`http://localhost:5000/api/video?path=${encodeURIComponent(
+                    data.translation
+                  )}`}
+                />
+              </div>
+            )}
+
+            {/* Audio translation for non-ASL languages */}
+            {data.translation && 
+             data.translation_type !== "ASL" && 
+             data.translation_lang !== "ASL" && (
               <div className="translation-audio">
-              <p>🌐 {data.translation_lang} Audio:</p>
+                <p>🌍 {data.translation_lang.charAt(0).toUpperCase() + data.translation_lang.slice(1)} Audio:</p>
                 <audio controls>
-              <source
-                src={`http://localhost:5000/api/audio?path=${encodeURIComponent(
-                data.translation.split(",")[1]
-                )}`}
-                type="audio/mpeg"
-              />
-              Your browser does not support the audio element.
-              </audio>
+                  <source
+                    src={`http://localhost:5000/api/audio?path=${encodeURIComponent(
+                      data.translation
+                    )}`}
+                    type="audio/mpeg"
+                  />
+                  Your browser does not support the audio element.
+                </audio>
               </div>
             )}
           </div>

@@ -4,8 +4,7 @@ from process import scrape, parse, summarize, translate, load_storage, save_stor
 import os
 
 app = Flask(__name__)
-CORS(app)
-
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
 @app.route("/api/storage", methods=["GET"])
 def get_storage():
@@ -27,53 +26,60 @@ def process_url():
 
     try:
         # Step 1: scrape
+        print(f"Scraping URL: {url}")
         content = scrape(url)
-        if content.startswith("Error:"):
+        if content.startswith("Error"):
             raise ValueError(content)
 
         # Step 2: parse
+        print("Parsing content...")
         safe_content = parse(content)
+        if safe_content == "Invalid":
+            raise ValueError("Content was flagged as unsafe")
 
         # Step 3: summarize
+        print("Summarizing...")
         summary = summarize(safe_content)
 
         # Step 4: optional translate
         result = {"url": url, "summary": summary}
         if lang:
-            translated = translate(summary, lang)
+            print(f"Translating to {lang}...")
+            translated = translate(summary, lang, url)
 
-            # If translate() returns "ASL,<filepath>", store the path in JSON
-            if isinstance(translated, str) and translated.startswith("ASL,"):
-                _, filepath = translated.split(",", 1)
-                filepath = filepath.strip()
+            # Parse the response: "TYPE,filepath,language,translated_text"
+            parts = translated.split(",", 3)  # Split into max 4 parts
+            translation_type = parts[0]
+            filepath = parts[1].strip()
+            translation_lang = parts[2].strip()
+            translated_text = parts[3].strip() if len(parts) > 3 else summary
 
-                if not os.path.exists(filepath):
-                    return jsonify({"error": f"Video file not found: {filepath}"}), 404
+            if not os.path.exists(filepath):
+                return jsonify({"error": f"File not found: {filepath}"}), 404
 
-                # Store the video path instead of streaming it directly
-                result["translation"] = filepath
-                result["translation_lang"] = "ASL"
+            # Replace summary with translated version for non-ASL translations
+            if translation_type != "ASL":
+                result["summary"] = translated_text
 
-            else:
-                _, filepath = translated.split(",", 1)
-                filepath = filepath.strip()
-
-                if not os.path.exists(filepath):
-                    return jsonify({"error": f"Audio file not found: {filepath}"}), 404
-
-                result["translation"] = translated
-                result["translation_lang"] = lang
+            # Add all translation info to result
+            result["translation"] = filepath
+            result["translation_lang"] = translation_lang
+            result["translation_type"] = translation_type
+            
+            print(f"Translation saved: {filepath} ({translation_lang})")
 
         # Step 5: save
         storage = load_storage()
         storage[url] = result
         save_storage(storage)
 
+        print("Success!")
+        print(f"Returning result: {result}")
         return jsonify(result)
 
     except Exception as e:
+        print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
 
 # Optional: separate endpoint to stream ASL video by path
 @app.route("/api/video", methods=["GET"])
