@@ -46,6 +46,27 @@ This combination of manual coding and AI-assisted improvement produced a stable 
 3. Maintaining emotional and tonal consistency in multilingual summarization
    
 ---
+## Tech Stack
+- Python 3.10+  
+- Gemini API for text moderation  
+- ElevenLabs API for audio generation  
+- JSON storage for lightweight data persistence  
+- Git + GitHub for collaboration and version control  
+
+---
+
+## Setup Instructions
+
+Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/UniHear.git
+   cd UniHear
+pip install -r requirements.txt
+python app.py
+bash run.sh
+cd frontend
+npm run dev
+Open your browser at http://localhost:5000.
 
 ## Folder Structure
 
@@ -69,25 +90,3 @@ Hack-Coms/
 
 
 ---
-
-## Tech Stack
-- Python 3.10+  
-- Gemini API for text moderation  
-- ElevenLabs API for audio generation  
-- JSON storage for lightweight data persistence  
-- Git + GitHub for collaboration and version control  
-
----
-
-## Setup Instructions
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/UniHear.git
-   cd UniHear
-pip install -r requirements.txt
-python app.py
-bash run.sh
-cd frontend
-npm run dev
-Open your browser at http://localhost:5000.
