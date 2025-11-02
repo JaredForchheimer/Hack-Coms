@@ -49,22 +49,23 @@ This combination of manual coding and AI-assisted improvement produced a stable 
 
 ## Folder Structure
 
+```text
 Hack-Coms/
 │
-├── app.py # Main application entry point
-├── asl_translate.py # ASL translation logic
-├── elevenlabs_api_key.txt # API key for ElevenLabs voice synthesis
-├── gemini_api_key.txt # API key for Gemini integration
-├── INSTALL.md # Setup and installation instructions
-├── main.py # Core backend logic
-├── process.py # Processing module for media and text
-├── requirements.txt # Python dependencies
-├── run.sh # Shell script to launch the app
-├── stored_content.json # Data and cache storage
-├── todo.txt # Development notes
-├── init.py # Package initializer
+├── app.py                     # Main application entry point
+├── asl_translate.py           # ASL translation logic
+├── elevenlabs_api_key.txt     # API key for ElevenLabs voice synthesis
+├── gemini_api_key.txt         # API key for Gemini integration
+├── INSTALL.md                 # Setup and installation instructions
+├── main.py                    # Core backend logic
+├── process.py                 # Processing module for media and text
+├── requirements.txt           # Python dependencies
+├── run.sh                     # Shell script to launch the app
+├── stored_content.json        # Data and cache storage
+├── todo.txt                   # Development notes
+├── __init__.py                # Package initializer
 │
-└── .git/ # Git version control metadata
+└── .git/                      # Git version control metadata
 
 
 ---
