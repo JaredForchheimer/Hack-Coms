@@ -44,5 +44,12 @@
     "translation": "audio/translation_chinese_ca8d0395b1.mp3",
     "translation_lang": "chinese",
     "translation_type": "Other"
+  },
+  "https://devpost.com/hackathons": {
+    "url": "https://devpost.com/hackathons",
+    "summary": "Devpost es una plataforma para hackatones, que ofrece eventos tanto p\u00fablicos como privados (espec\u00edficos de la empresa). Ayuda a los desarrolladores a participar en hackatones y a las empresas a organizarlos, fomentando la innovaci\u00f3n, la colaboraci\u00f3n y la promoci\u00f3n de la plataforma. Recursos como blogs, historias de clientes, gu\u00edas de planificaci\u00f3n, seminarios web y un servicio de asistencia t\u00e9cnica est\u00e1n disponibles para apoyar experiencias de hackat\u00f3n exitosas.",
+    "translation": "audio/translation_spanish_ea99e118da.mp3",
+    "translation_lang": "spanish",
+    "translation_type": "Other"
   }
 }

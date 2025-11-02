@@ -33,7 +33,7 @@ export default function App() {
       if (data.error) {
         alert(data.error);
       } else {
-        setResults((r) => [...r, [url, data]]);
+        setResults((r) => [[url, data], ...r]); // newest posts at top
       }
     } catch (err) {
       alert("Error processing URL: " + err.message);
@@ -45,10 +45,10 @@ export default function App() {
   };
 
   return (
-    <div className="container">
-      <h1>Content Processor</h1>
+    <div className="feed-container">
+      <header className="feed-header">ASL News Feed</header>
 
-      <div className="input-group">
+      <div className="input-section">
         <input
           type="text"
           placeholder="Enter URL..."
@@ -57,59 +57,62 @@ export default function App() {
         />
         <input
           type="text"
-          placeholder="Translate summary to (optional)... e.g., Spanish or ASL"
+          placeholder="Translate summary to (optional)... e.g., ASL"
           value={lang}
           onChange={(e) => setLang(e.target.value)}
         />
         <button onClick={handleProcess} disabled={loading}>
-          {loading ? "Processing..." : "Process URL"}
+          {loading ? "Processing..." : "Post"}
         </button>
       </div>
 
-      <hr />
+      <div className="feed">
+        {results.length === 0 && (
+          <p style={{ textAlign: "center" }}>No content yet.</p>
+        )}
 
-      <h2>Stored Summaries</h2>
-      {results.length === 0 && <p>No stored content yet.</p>}
-
-      <div className="summaries">
         {results.map(([url, data]) => (
-          <div key={url} className="summary-card">
-            <p className="url">🔗 {url}</p>
-            <p className="summary">{data.summary}</p>
+          <div key={url} className="post-card">
+            <p className="post-url">🔗 {url}</p>
+            <p className="post-summary">{data.summary}</p>
 
-            {/* ASL video - Check both translation_type and translation_lang */}
-            {data.translation && 
-             (data.translation_type === "ASL" || data.translation_lang === "ASL") && (
-              <div className="translation-video">
-                <p>🤟 ASL Video:</p>
-                <video
-                  controls
-                  width="400"
-                  style={{ marginTop: "10px" }}
-                  src={`http://localhost:5000/api/video?path=${encodeURIComponent(
-                    data.translation
-                  )}`}
-                />
-              </div>
-            )}
-
-            {/* Audio translation for non-ASL languages */}
-            {data.translation && 
-             data.translation_type !== "ASL" && 
-             data.translation_lang !== "ASL" && (
-              <div className="translation-audio">
-                <p>🌍 {data.translation_lang.charAt(0).toUpperCase() + data.translation_lang.slice(1)} Audio:</p>
-                <audio controls>
-                  <source
-                    src={`http://localhost:5000/api/audio?path=${encodeURIComponent(
+            {/* ASL video */}
+            {data.translation &&
+              (data.translation_type === "ASL" ||
+                data.translation_lang === "ASL") && (
+                <div className="post-translation-video">
+                  <p>🤟 ASL Video:</p>
+                  <video
+                    controls
+                    width="100%"
+                    src={`http://localhost:5000/api/video?path=${encodeURIComponent(
                       data.translation
                     )}`}
-                    type="audio/mpeg"
                   />
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            )}
+                </div>
+              )}
+
+            {/* Audio translation for non-ASL */}
+            {data.translation &&
+              data.translation_type !== "ASL" &&
+              data.translation_lang !== "ASL" && (
+                <div className="post-translation-audio">
+                  <p>
+                    🌍{" "}
+                    {data.translation_lang.charAt(0).toUpperCase() +
+                      data.translation_lang.slice(1)}{" "}
+                    Audio:
+                  </p>
+                  <audio controls>
+                    <source
+                      src={`http://localhost:5000/api/audio?path=${encodeURIComponent(
+                        data.translation
+                      )}`}
+                      type="audio/mpeg"
+                    />
+                  </audio>
+                </div>
+              )}
           </div>
         ))}
       </div>
