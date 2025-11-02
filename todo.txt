@@ -1,2 +1,3 @@
 - Change hardcoded file paths for audio and video, so you can store multiple sources with the same output type 
 - make better frontend
+- make it work with youtube videos. For some reason, it is not pulling transcript.
