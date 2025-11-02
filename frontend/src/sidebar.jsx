@@ -1,13 +1,25 @@
 import React from "react";
 import "./sidebar.css";
 
-export default function Sidebar() {
+export default function Sidebar({ activePage, setActivePage }) {
+  const menuItems = [
+    { label: "Home", key: "feed" },
+    { label: "Sources", key: "sources" },
+    { label: "Upload", key: "upload" },
+  ];
+
   return (
     <div className="sidebar">
-      <h2 className="sidebar-header">Menu</h2>
       <ul className="sidebar-menu">
-        <li className="sidebar-item">Sources</li>
-        <li className="sidebar-item">Upload</li>
+        {menuItems.map((item) => (
+          <li
+            key={item.key}
+            className={`sidebar-item ${activePage === item.key ? "active" : ""}`}
+            onClick={() => setActivePage(item.key)}
+          >
+            {item.label}
+          </li>
+        ))}
       </ul>
     </div>
   );

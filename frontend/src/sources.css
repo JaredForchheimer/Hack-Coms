@@ -1,0 +1,32 @@
+.page-content {
+  margin-left: 260px;          /* leave room for sidebar */
+  padding: 2rem;
+  min-height: 100vh;
+  color: #e5e5e5;              /* dark theme text */
+  background-color: #202123;   /* dark background */
+  box-sizing: border-box;
+}
+
+input, select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #2a2a2e;
+  color: #e5e5e5;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #ff7e5f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background-color: #e96a45;
+}
