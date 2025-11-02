@@ -1,5 +1,6 @@
 Run this stuff:
 #Note - these are linux commands, convert to windows equivalent
+#Note - start these commands from root folder
 pip install -r requirements.txt 
 python -m spacy download en_core_web_sm
 cd frontend
