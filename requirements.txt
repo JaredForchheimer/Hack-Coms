@@ -1,3 +1,0 @@
-spacy
-moviepy==1.0.3
-google-genai
