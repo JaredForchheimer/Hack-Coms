@@ -55,6 +55,12 @@ def process_url():
                 result["translation_lang"] = "ASL"
 
             else:
+                _, filepath = translated.split(",", 1)
+                filepath = filepath.strip()
+
+                if not os.path.exists(filepath):
+                    return jsonify({"error": f"Audio file not found: {filepath}"}), 404
+
                 result["translation"] = translated
                 result["translation_lang"] = lang
 
@@ -76,6 +82,14 @@ def stream_video():
     if not filepath or not os.path.exists(filepath):
         return jsonify({"error": "Video file not found"}), 404
     return send_file(filepath, mimetype="video/mp4")
+
+
+@app.route("/api/audio", methods=["GET"])
+def stream_audio():
+    filepath = request.args.get("path")
+    if not filepath or not os.path.exists(filepath):
+        return jsonify({"error": "Audio file not found"}), 404
+    return send_file(filepath, mimetype="audio/mpeg")
 
 
 if __name__ == "__main__":

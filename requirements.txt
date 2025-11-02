@@ -1,3 +1,11 @@
 spacy
 moviepy==1.0.3
 google-genai
+flask
+flask_cors
+bs4
+youtube_transcript_api
+vite
+elevenlabs
+beautifulsoup4
+requests

@@ -1,0 +1,2 @@
+- Change hardcoded file paths for audio and video, so you can store multiple sources with the same output type 
+- make better frontend

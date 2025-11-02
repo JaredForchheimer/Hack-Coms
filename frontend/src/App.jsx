@@ -77,11 +77,20 @@ export default function App() {
             <p className="url">🔗 {url}</p>
             <p className="summary">{data.summary}</p>
 
-            {/* Text translation */}
+            {/* Audio translation */}
             {data.translation && data.translation_lang !== "ASL" && (
-              <p className="translation">
-                🌐 {data.translation_lang}: {data.translation}
-              </p>
+              <div className="translation-audio">
+              <p>🌐 {data.translation_lang} Audio:</p>
+                <audio controls>
+              <source
+                src={`http://localhost:5000/api/audio?path=${encodeURIComponent(
+                data.translation.split(",")[1]
+                )}`}
+                type="audio/mpeg"
+              />
+              Your browser does not support the audio element.
+              </audio>
+              </div>
             )}
 
             {/* ASL video */}
