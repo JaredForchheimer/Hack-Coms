@@ -66,6 +66,7 @@ pip install -r requirements.txt
 python app.py
 bash run.sh
 cd frontend
+npm install
 npm run dev
 Open your browser at http://localhost:5000.
 
