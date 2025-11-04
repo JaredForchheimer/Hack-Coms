@@ -61,6 +61,7 @@ This combination of manual coding and AI assisted improvement produced a stable 
 Clone the repository:
    ```bash
    git clone https://github.com/your-username/UniHear.git
+   NOTE: Make sure to switch branch to final or jayden/backend
    cd UniHear
 pip install -r requirements.txt
 python app.py
